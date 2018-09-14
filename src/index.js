@@ -5,6 +5,9 @@
  Напишите аналог встроенного метода forEach для работы с массивами
  */
 function forEach(array, fn) {
+    for (let i = 0; i < array.length; i++) {
+        fn(array[i], i, array);
+    }
 }
 
 /*
@@ -12,6 +15,13 @@ function forEach(array, fn) {
  Напишите аналог встроенного метода map для работы с массивами
  */
 function map(array, fn) {
+    let arr = [];
+
+    for (let i = 0; i < array.length; i++) {
+        arr.push(fn(array[i], i, array));
+    }
+
+    return arr;
 }
 
 /*
@@ -19,6 +29,23 @@ function map(array, fn) {
  Напишите аналог встроенного метода reduce для работы с массивами
  */
 function reduce(array, fn, initial) {
+    let result,
+        i = 0;
+
+    // если  указан, то установим его в результат
+    if (initial) {
+        result = initial;
+    } else {
+        // если нет , то присваиваем начальное значение как первый элмент массива
+        result = array[0];
+        ++i;
+    }
+    // для всех элементов вызываем переданную функцию
+    for (i; i < array.length; ++i) {
+        result = fn(result, array[i], i, array);
+    }
+
+    return result;
 }
 
 /*
@@ -27,6 +54,8 @@ function reduce(array, fn, initial) {
  Функция должна удалить указанное свойство из указанного объекта
  */
 function deleteProperty(obj, prop) {
+
+    delete obj[prop];
 }
 
 /*
@@ -35,6 +64,7 @@ function deleteProperty(obj, prop) {
  Функция должна проверить существует ли укзаанное свойство в указанном объекте
  */
 function hasProperty(obj, prop) {
+    return obj.hasOwnProperty(prop)
 }
 
 /*
@@ -42,21 +72,52 @@ function hasProperty(obj, prop) {
  Функция должна получить все перечисляемые свойства объекта и вернуть их в виде массива
  */
 function getEnumProps(obj) {
+    let arr;
+
+    arr = Object.keys(obj);
+
+    return arr;
 }
 
 /*
  Задача 7:
  Функция должна перебрать все свойства объекта, преобразовать их имена в верхний регистра и вернуть в виде массива
  */
+
 function upperProps(obj) {
+    let arr;
+
+    arr = Object.keys(obj)
+    arr.forEach((el, i)=> {
+        arr[i] = el.toUpperCase();
+    })
+
+    return arr;
 }
+
+// function upperProps(obj) {
+//     return Object.keys(obj).map(item => item.toUpperCase());
+// }
 
 /*
  Задача 8 *:
  Напишите аналог встроенного метода slice для работы с массивами
  */
 function slice(array, from, to) {
-}
+    let newArray = [];
+
+    // проверки для to
+    (to === undefined || to > array.length) ? (to = array.length) : void 0;
+    (to < 0) ? (to = array.length + to) : void 0;
+    // проверки для from
+    from === undefined || from < 0 ? (from = 0) : void 0;
+  
+    for (let i = 0; from < to; ++from, ++i) {
+      newArray[i] = array[from];
+    }
+  
+    return newArray;
+  }
 
 /*
  Задача 9 *:
@@ -64,6 +125,12 @@ function slice(array, from, to) {
  Proxy должен перехватывать все попытки записи значений свойств и возводить это значение в квадрат
  */
 function createProxy(obj) {
+    return new Proxy(obj, {
+        set(target, property, value) {
+            target[property] = value * value;
+            return true;
+        }
+    });
 }
 
 export {
